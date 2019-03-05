@@ -1,0 +1,37 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.rds
+
+# ignore temp files w/ trailing ~
+*~
+
+# ignore hidden files
+.*
+
+# ignore files with the rolling extensions
+*.DS_Store
+*.Rhistory
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.bib.bak
+*.thm
+*.concordance.tex
+*.nav
+*.snm
+
+# ignore compiled RSTAN code
+*.rds
+
+# don't ignore the .gitignore file
+!.gitignore
+
+# Ignore Packrat library
+packrat/*
+packrat/lib*/
