@@ -37,7 +37,7 @@ state.mem.mat.sim <- as.matrix(state.mem.mat.sim)
 
 # pull data into a list and add some simulations
 sim.data.noest <- list(N = n.sim, # 2000 obs
-                    y = rt(n.sim, 3), # t-dist outcome
+                    y = rt(n.sim, 2), # t-dist outcome
                     state = rep(1:50, times = n.sim/50), # 50 states
                     S = 50, 
                     year = rep(1:200, times = n.sim/200), # 200 years
@@ -94,23 +94,20 @@ check_hmc_diagnostics(sim.out.est)
 
 
 ### Plot estimated parameters against "true values" from earlier simulated data
-sim.est.sum <- extract(sim.out.est, pars = c("beta", "gamma", "sigma", 
+sim.est.sum <- extract(sim.out.est, pars = c("beta", "gamma", "lambda", "sigma", 
                                              "sigma_state", "sigma_year", "sigma_all"), 
                        permuted = TRUE)
 
 colnames(sim.est.sum$beta) <- c("beta1", "beta2")
 colnames(sim.est.sum$gamma) <- c("gamma1", "gamma2")
-colnames(sim.est.sum$sigma) <- c("sigma")
-colnames(sim.est.sum$sigma_state) <- c("sigma_state")
-colnames(sim.est.sum$sigma_year) <- c("sigma_year")
-colnames(sim.est.sum$sigma_all) <- c("sigma_all")
+colnames(sim.est.sum$lambda) <- paste0("lambda", 1:100)
 
 
 # Start with beta- second-level regression parameters
 mcmc_areas(sim.est.sum$beta, pars = c("beta1"), prob = .9) +
   vline_at(true.beta[1], color = "red", size = 2) 
 mcmc_areas(sim.est.sum$beta, pars = c("beta2"), prob = .9) +
-  vline_at(xintercept = true.beta[2], color = "red", size = 2) 
+  vline_at(true.beta[2], color = "red", size = 2) 
 
 
 
@@ -119,6 +116,15 @@ mcmc_areas(sim.est.sum$gamma, pars = c("gamma1"), prob = .9) +
   vline_at(true.gamma[1], color = "red", size = 2) 
 mcmc_areas(sim.est.sum$gamma, pars = c("gamma2"), prob = .9) +
   vline_at(true.gamma[2], color = "red", size = 2) 
+
+
+# now lambda parameters
+mcmc_areas(sim.est.sum$lambda, pars = c("lambda1"), prob = .9) +
+  vline_at(true.lambda[1], color = "red", size = 2) 
+mcmc_areas(sim.est.sum$lambda, pars = c("lambda50"), prob = .9) +
+  vline_at(true.lambda[50], color = "red", size = 2) 
+mcmc_areas(sim.est.sum$lambda, pars = c("lambda100"), prob = .9) +
+  vline_at(true.lambda[100], color = "red", size = 2) 
 
 
 
