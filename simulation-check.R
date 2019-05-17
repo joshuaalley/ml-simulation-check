@@ -85,7 +85,7 @@ sim.data.est$run_estimation <- 1 # estimate the likelihood
 
 
 # run the model on this simulated data: attempt to recover parameters
-sim.out.est <- sampling(compiled.ml, data = sim.data.noest,
+sim.out.est <- sampling(compiled.ml, data = sim.data.est,
                     iter = 2000, warmup = 1000, chains = 4)
 
 
