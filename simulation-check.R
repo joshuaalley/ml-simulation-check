@@ -57,7 +57,7 @@ compiled.ml <- stan_model("ml-model-sim.stan")
 
 # Run model to generate draws from posterior and parameter values
 sim.out <- sampling(compiled.ml, data = sim.data.noest,
-                    iter = 2000, warmup = 1000, chains = 4)
+                    iter = 1000, warmup = 500, chains = 4)
 
 # Check diagnostics
 check_hmc_diagnostics(sim.out)
@@ -86,7 +86,7 @@ sim.data.est$run_estimation <- 1 # estimate the likelihood
 
 # run the model on this simulated data: attempt to recover parameters
 sim.out.est <- sampling(compiled.ml, data = sim.data.est,
-                    iter = 2000, warmup = 1000, chains = 4)
+                    iter = 1000, warmup = 500, chains = 4)
 
 
 # Check diagnostics
@@ -101,6 +101,18 @@ sim.est.sum <- extract(sim.out.est, pars = c("beta", "gamma", "lambda", "sigma",
 colnames(sim.est.sum$beta) <- c("beta1", "beta2")
 colnames(sim.est.sum$gamma) <- c("gamma1", "gamma2")
 colnames(sim.est.sum$lambda) <- paste0("lambda", 1:100)
+
+
+# Calculate accuracy of credible intervals: how many intervals contain true lambda? 
+lambda.summary.sim <- summary(sim.out.est, pars = c("lambda"), probs = c(0.05, 0.95))$summary
+lambda.summary.sim <- cbind.data.frame(true.lambda, lambda.summary.sim)
+
+# create a dummy indicator of accurate coverage
+lambda.summary.sim$accurate <- ifelse(lambda.summary.sim$true.lambda > lambda.summary.sim$`5%` & # greater than lower bound
+                                       lambda.summary.sim$true.lambda < lambda.summary.sim$`95%`,
+                                     1, 0) # smaller than upper bound
+sum(lambda.summary.sim$accurate) 
+# gets 90/100 pars right
 
 
 # Start with beta- second-level regression parameters

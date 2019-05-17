@@ -1,6 +1,7 @@
 // Joshua Alley
 // Texas A&M University
 // Multiple Membership Multilevel Model 
+// Use switch in likelihood to simulate data and recover parameter estimates
 
 
 data {
